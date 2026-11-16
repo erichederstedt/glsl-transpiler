@@ -1,5 +1,5 @@
 {
-  "name": "glsl-transpiler",
+  "name": "@eric.hederstedt/glsl-transpiler",
   "version": "4.0.0",
   "description": "Transpile GLSL to JS",
   "main": "index.js",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stackgl/glsl-transpiler.git"
+    "url": "git+https://github.com/erichederstedt/glsl-transpiler.git"
   },
   "keywords": [
     "headless-gl",
@@ -48,15 +48,16 @@
     "webgl",
     "gpu"
   ],
-  "author": "Dmitry Yv <df.creative@gmail.com>",
+  "author": "eric.hederstedt",
   "contributors": [
+	"Dmitry Yv <df.creative@gmail.com>",
     "Xiaoji Chen (http://pessimistress.github.io/)"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stackgl/glsl-transpiler/issues"
+    "url": "https://github.com/erichederstedt/glsl-transpiler/issues"
   },
-  "homepage": "https://github.com/stackgl/glsl-transpiler#readme",
+  "homepage": "https://github.com/erichederstedt/glsl-transpiler#readme",
   "engines": {
     "node": ">=18"
   }
