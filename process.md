@@ -8,6 +8,8 @@ The compiler has three stages: preprocess source, parse with Subscript, and lowe
 
 `lib/types.js` shares constructor implementations across vector types and matrix dimensions. `lib/operators.js` handles typed arithmetic and matrix multiplication. `lib/descriptor.js` carries component expressions, dimensions, and whether expansion is safe. Expressions with side effects cannot be duplicated by optimization.
 
+`lib/sourcemap.js` implements the `sourceMap` option. Before `prepr` runs, each code line is tagged with its line number (directive lines are left alone so `prepr` reads them unchanged); the tags are removed afterwards and record which original line every preprocessed line came from. The parser stores each statement's start offset as `node.start`, and the `stmt` transform puts a marker carrying that offset in front of its code. Expression strings are never marked, since the compiler inspects them with regular expressions. After the stdlib is prepended, the markers are stripped and turned into mappings. Generated lines without a marker inherit the previous statement, except lines holding only closing braces.
+
 `lib/stdlib.js`, `lib/stdlib300.js`, and `lib/texture.js` provide runtime helpers. Functions must be self-contained or declare `.include` dependencies, because the compiler serializes only the helpers a shader needs. Texture and derivative hooks establish the boundary with the host renderer.
 
 | Area | Tests |
@@ -24,6 +26,7 @@ The compiler has three stages: preprocess source, parse with Subscript, and lowe
 | Texture families, mip levels, integer samplers, cubes, shadows, host hooks | `test/textures.js` |
 | Branches, loops, declaration conditions, switch, discard | `test/parser.js`, `test/webgl2.js`, `test/textures.js` |
 | Single evaluation, safe generated names, scope and state isolation | `test/webgl2.js`, `test/parser.js` |
+| Source maps through directives, macros and continuations, columns, streams, unchanged output | `test/sourcemap.js` |
 | Historical grammar stress fixture and executable sound shader | `test/index.js`, `test/fixture/` |
 
 `npm run test:coverage` runs the full suite while counting each AST transform. This is a reachability check, not proof that every overload or every branch is correct. Numerical tests separately exercise emitted code. The grammar stress fixture deliberately includes semantically invalid GLSL and is tested for translation only; the sound shader is executed.

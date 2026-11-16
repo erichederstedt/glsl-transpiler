@@ -16,6 +16,7 @@ import './builtins.js'
 import './preprocessor.js'
 import './api.js'
 import './structs.js'
+import './sourcemap.js'
 
 var compile = GLSL({})
 

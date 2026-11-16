@@ -84,7 +84,11 @@ let compile = GLSL({
 	includes: true,
 
 	// Enable print() and show() for inspecting compiled expressions.
-	debug: false
+	debug: false,
+
+	// Generate a source map in compile.compiler.map. Pass true, or an object:
+	// { source: 'shader.glsl', file: 'shader.js', sourcesContent: true }
+	sourceMap: false
 })
 
 // compile source code
@@ -115,6 +119,15 @@ Each call to `compile()` starts fresh. For a single compilation, you can also us
 
 Declaration callbacks receive `(name, variable)`, including the variable's `type`, `dimensions`, `binding`, `qualifiers` and `layout`. Omit a callback to use the usual initializer, or set it to `false` to omit those declarations. Callbacks initialize shader variables; read their values after `main()` to collect outputs.
 
+With `sourceMap` enabled, each `compile(source)` stores a [source map v3](https://tc39.es/ecma426/) object in `compile.compiler.map`; the compiled code is unchanged. Mappings are per statement: each generated line points to the GLSL statement it came from, with line numbers preserved through `#if`/`#ifdef` blocks, macros and line continuations. Columns can drift on lines where a macro was expanded before the statement, stdlib helpers and closing braces are unmapped, and a custom `preprocess` function must keep line numbers for the map to stay correct. Compiling an AST produces no map, since there is no source text. To debug compiled code with devtools, append the map inline:
+
+```js
+const compile = GLSL({ sourceMap: { source: 'shader.frag' } })
+const code = compile(source)
+const url = 'data:application/json;base64,' + btoa(JSON.stringify(compile.compiler.map))
+new Function(code + '\n//# sourceMappingURL=' + url)
+```
+
 With `debug: true`, `print(expression)` logs the compiled expression and its type; `show(expression)` logs its descriptor. You can also use `console.log(value)` inside a shader to debug it at runtime.
 
 ### glsl-transpiler/stream
@@ -130,7 +143,7 @@ fs.createReadStream('./source.glsl')
 .pipe(fs.createWriteStream('./source.js'))
 ```
 
-The stream keeps the result in `source`, the AST in `tree` and collected info in `compiler`. Compilation failures emit an `error` event.
+The stream keeps the result in `source`, the AST in `tree`, the source map (with `sourceMap` enabled) in `map` and collected info in `compiler`. Compilation failures emit an `error` event.
 
 ## WebGL 2
 
@@ -206,6 +219,7 @@ Tests check generated code with optimizations on and off. `test:coverage` also c
 
 * [subscript](https://github.com/dy/subscript) — parse glsl expressions.<br/>
 * [prepr](https://github.com/dy/prepr) — expand macros and preprocessor directives.<br/>
+* [source-map](https://github.com/mozilla/source-map) — generate source maps.<br/>
 
 ## Used by
 

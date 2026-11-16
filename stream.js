@@ -9,6 +9,7 @@ export class GlslTranspilerStream extends Transform {
 		this.compiler = GLSL(options).compiler
 		this.source = ''
 		this.tree = null
+		this.map = null
 		this.chunks = []
 		this.decoder = new StringDecoder('utf8')
 	}
@@ -23,6 +24,7 @@ export class GlslTranspilerStream extends Transform {
 		try {
 			this.source = this.compiler.compile(this.chunks.join('') + this.decoder.end())
 			this.tree = this.compiler.tree
+			this.map = this.compiler.map
 			this.chunks.length = 0
 			this.push(this.source)
 			done()

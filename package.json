@@ -8,6 +8,7 @@
     "inherits": "^2.0.1",
     "pick-by-alias": "^1.2.0",
     "prepr": "^1.2.5",
+    "source-map": "^0.7.6",
     "subscript": "^7.3.1"
   },
   "devDependencies": {
